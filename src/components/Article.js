@@ -1,33 +1,51 @@
-import React, {Component} from 'react'
+import React, {Component, PureComponent} from 'react'
 
-class Article extends Component {
-    state = {
-        isOpen: true
-
-
+class Article extends PureComponent {
+    constructor(props) {
+        super(props)
+        this.state = {
+            count: 0
+        }
     }
 
+    componentWillMount() {
+        console.log('---', 'mounting')
+    }
+
+
+    componentWillUpdate (){
+        console.log ('---','will update')
+    }
     render() {
-        const {article} = this.props
-        const body = this.state.isOpen && <section>{article.text}</section>
-        return (
-            <div>
-                <h2>
+    const {article, isOpen,onButtonClick} = this.props
+    const style = {width: '50%'}
+    const body = isOpen && <section className='card-text'>{article.text}</section>
+    return (
+        <div className="card mx-auto" style={style}>
+            <div className="card-header">
+                <h2 onClick={this.incrementCounter}>
                     {article.title}
-                    <button onClick={this.handleClick}>close</button>
+                    clicked = {this.state.count}
+                    <button onClick={onButtonClick} className="btn btn-primary btn-lg float-md-end">
+                        {isOpen ? 'close' : 'open'}
+                    </button>
                 </h2>
-                {body}
-                <h3>creation date:{(new Date(article.date)).toDateString()}</h3>
             </div>
-        )
-    }
-
-    handleClick = () => {
-        console.log('---', 'clicked')
+            <div className="card-body">
+                <h6 className="card-subtitle text-muted">
+                    creation date:{(new Date(article.date)).toDateString()}</h6>
+                {body}
+            </div>
+        </div>
+    )
+}
+     incrementCounter =() => {
         this.setState({
-            isOpen: !this.state.isOpen
+            count:this.state.count + 1
         })
-    }
+
+     }
+
 }
 
 export default Article
